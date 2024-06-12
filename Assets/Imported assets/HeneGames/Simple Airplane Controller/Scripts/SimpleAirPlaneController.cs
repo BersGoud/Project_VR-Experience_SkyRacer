@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
 
 namespace HeneGames.Airplane
 {
@@ -164,20 +166,62 @@ namespace HeneGames.Airplane
         [Tooltip("How far must the plane be from the runway before it can be controlled again")]
         [SerializeField] private float takeoffLenght = 30f;
 
+        [Header("VR Joystick Mode")]
+        public bool vrJoystickMode = false;
+
+        [Header("VR Controllers")]
+        public InputActionAsset inputActions;
+
+        private InputAction leftJoystickAction;
+        private InputAction rightJoystickAction;
+        private InputAction leftTriggerAction;
+
+        #region VR Input variables
+        private Vector2 leftJoystickInput;
+        private Vector2 rightJoystickInput;
+        private bool leftTriggerPressed;
+        #endregion
+
         private void Start()
         {
-            //Setup speeds
-            maxSpeed = defaultSpeed;
-            currentSpeed = defaultSpeed;
-            ChangeSpeedMultiplier(1f);
-
-            //Get and set rigidbody
+            // Setup speeds and Rigidbody...
             rb = GetComponent<Rigidbody>();
             rb.isKinematic = true;
             rb.useGravity = false;
             rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
 
             SetupColliders(crashCollidersRoot);
+
+            // Ensure inputActions is not null
+            if (inputActions == null)
+            {
+                Debug.LogError("InputActions asset is not assigned.");
+                return;
+            }
+
+            // Find action map and actions
+            var actionMap = inputActions.FindActionMap("VRControls");
+            if (actionMap == null)
+            {
+                Debug.LogError("Action map 'VRControls' not found.");
+                return;
+            }
+
+            leftJoystickAction = actionMap.FindAction("LeftJoystick");
+            rightJoystickAction = actionMap.FindAction("RightJoystick");
+            leftTriggerAction = actionMap.FindAction("LeftTrigger");
+
+            if (leftJoystickAction == null)
+                Debug.LogError("Action 'LeftJoystick' not found.");
+            if (rightJoystickAction == null)
+                Debug.LogError("Action 'RightJoystick' not found.");
+            if (leftTriggerAction == null)
+                Debug.LogError("Action 'LeftTrigger' not found.");
+
+            // Enable actions
+            leftJoystickAction?.Enable();
+            rightJoystickAction?.Enable();
+            leftTriggerAction?.Enable();
         }
 
         private void Update()
@@ -185,7 +229,14 @@ namespace HeneGames.Airplane
             AudioSystem();
             if (!isAgent)
             {
-                HandleInputs();
+                if (vrJoystickMode)
+                {
+                    HandleVRInputs();
+                }
+                else
+                {
+                    HandleInputs();
+                }
             }
 
             switch (airplaneState)
@@ -280,14 +331,14 @@ namespace HeneGames.Airplane
 
         private void Movement()
         {
-            //Move forward
+            // Move forward
             transform.Translate(Vector3.forward * currentSpeed * Time.deltaTime);
 
-            //Rotate airplane by inputs
+            // Rotate airplane by inputs
             transform.Rotate(Vector3.forward * -inputH * currentRollSpeed * Time.deltaTime);
             transform.Rotate(Vector3.right * inputV * currentPitchSpeed * Time.deltaTime);
 
-            //Rotate yaw
+            // Rotate yaw
             if (inputYawRight)
             {
                 transform.Rotate(Vector3.up * currentYawSpeed * Time.deltaTime);
@@ -297,51 +348,41 @@ namespace HeneGames.Airplane
                 transform.Rotate(-Vector3.up * currentYawSpeed * Time.deltaTime);
             }
 
-            //Accelerate and deacclerate
-            if (currentSpeed < maxSpeed)
-            {
-                currentSpeed += accelerating * Time.deltaTime;
-            }
-            else
-            {
-                currentSpeed -= deaccelerating * Time.deltaTime;
-            }
-
-            //Turbo
+            // Set speed based on turbo state
             if (inputTurbo && !turboOverheat)
             {
-                //Turbo overheating
-                if(turboHeat > 100f)
+                // Turbo overheating
+                if (turboHeat > 100f)
                 {
                     turboHeat = 100f;
                     turboOverheat = true;
                 }
                 else
-                {       
-                    //Add turbo heat
+                {
+                    // Add turbo heat
                     turboHeat += Time.deltaTime * turboHeatingSpeed;
                 }
 
-                //Set speed to turbo speed and rotation to turbo values
-                maxSpeed = turboSpeed;
+                // Set speed to turbo speed and rotation to turbo values
+                currentSpeed = turboSpeed;
 
                 currentYawSpeed = yawSpeed * yawTurboMultiplier;
                 currentPitchSpeed = pitchSpeed * pitchTurboMultiplier;
                 currentRollSpeed = rollSpeed * rollTurboMultiplier;
 
-                //Engine lights
+                // Engine lights
                 currentEngineLightIntensity = turbineLightTurbo;
 
-                //Effects
+                // Effects
                 ChangeWingTrailEffectThickness(trailThickness);
 
-                //Audio
+                // Audio
                 currentEngineSoundPitch = turboSoundPitch;
             }
             else
             {
-                //Turbo cooling down
-                if(turboHeat > 0f)
+                // Turbo cooling down
+                if (turboHeat > 0f)
                 {
                     turboHeat -= Time.deltaTime * turboCooldownSpeed;
                 }
@@ -350,29 +391,29 @@ namespace HeneGames.Airplane
                     turboHeat = 0f;
                 }
 
-                //Turbo cooldown
+                // Turbo cooldown
                 if (turboOverheat)
                 {
-                   if(turboHeat <= turboOverheatOver)
-                   {
+                    if (turboHeat <= turboOverheatOver)
+                    {
                         turboOverheat = false;
-                   }
+                    }
                 }
 
-                //Speed and rotation normal
-                maxSpeed = defaultSpeed * speedMultiplier;
+                // Speed and rotation normal
+                currentSpeed = defaultSpeed;
 
                 currentYawSpeed = yawSpeed;
                 currentPitchSpeed = pitchSpeed;
                 currentRollSpeed = rollSpeed;
 
-                //Engine lights
+                // Engine lights
                 currentEngineLightIntensity = turbineLightDefault;
 
-                //Effects
+                // Effects
                 ChangeWingTrailEffectThickness(0f);
 
-                //Audio
+                // Audio
                 currentEngineSoundPitch = defaultSoundPitch;
             }
         }
@@ -397,7 +438,7 @@ namespace HeneGames.Airplane
             currentSpeed = Mathf.Lerp(currentSpeed, 0f, Time.deltaTime);
 
             //Set local rotation to zero
-            transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(0f,0f,0f), 2f * Time.deltaTime);
+            transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(0f, 0f, 0f), 2f * Time.deltaTime);
         }
 
         #endregion
@@ -425,7 +466,7 @@ namespace HeneGames.Airplane
 
             //Far enough from the runaway go back to flying state
             float _distanceToRunway = Vector3.Distance(transform.position, currentRunway.transform.position);
-            if(_distanceToRunway > takeoffLenght)
+            if (_distanceToRunway > takeoffLenght)
             {
                 currentRunway = null;
                 airplaneState = AirplaneState.Flying;
@@ -471,7 +512,7 @@ namespace HeneGames.Airplane
 
         private void UpdatePropellersAndLights()
         {
-            if(!planeIsDead)
+            if (!planeIsDead)
             {
                 //Rotate propellers if any
                 if (propellers.Length > 0)
@@ -544,7 +585,7 @@ namespace HeneGames.Airplane
         {
             for (int i = 0; i < _lights.Length; i++)
             {
-                if(!planeIsDead)
+                if (!planeIsDead)
                 {
                     _lights[i].intensity = Mathf.Lerp(_lights[i].intensity, _intensity, 10f * Time.deltaTime);
                 }
@@ -552,7 +593,7 @@ namespace HeneGames.Airplane
                 {
                     _lights[i].intensity = Mathf.Lerp(_lights[i].intensity, 0f, 10f * Time.deltaTime);
                 }
-               
+
             }
         }
 
@@ -571,7 +612,7 @@ namespace HeneGames.Airplane
                 if (airPlaneColliders[i].collideSometing)
                 {
                     //Reset colliders
-                    foreach(SimpleAirPlaneCollider _airPlaneCollider in airPlaneColliders)
+                    foreach (SimpleAirPlaneCollider _airPlaneCollider in airPlaneColliders)
                     {
                         _airPlaneCollider.collideSometing = false;
                     }
@@ -624,7 +665,7 @@ namespace HeneGames.Airplane
 
         public bool UsingTurbo()
         {
-            if(maxSpeed == turboSpeed)
+            if (maxSpeed == turboSpeed)
             {
                 return true;
             }
@@ -657,12 +698,12 @@ namespace HeneGames.Airplane
         /// <param name="_speedMultiplier"></param>
         public void ChangeSpeedMultiplier(float _speedMultiplier)
         {
-            if(_speedMultiplier < 0f)
+            if (_speedMultiplier < 0f)
             {
                 _speedMultiplier = 0f;
             }
 
-            if(_speedMultiplier > 1f)
+            if (_speedMultiplier > 1f)
             {
                 _speedMultiplier = 1f;
             }
@@ -686,6 +727,24 @@ namespace HeneGames.Airplane
 
             //Turbo
             inputTurbo = Input.GetKey(KeyCode.LeftShift);
+        }
+
+        private void HandleVRInputs()
+        {
+            if (leftJoystickAction == null || rightJoystickAction == null || leftTriggerAction == null)
+            {
+                Debug.LogError("One or more input actions are not initialized.");
+                return;
+            }
+
+            leftJoystickInput = leftJoystickAction.ReadValue<Vector2>();
+            rightJoystickInput = rightJoystickAction.ReadValue<Vector2>();
+            leftTriggerPressed = leftTriggerAction.ReadValue<float>() > 0.5f;
+
+            inputH = rightJoystickInput.x;
+            inputV = rightJoystickInput.y;
+            inputTurbo = leftTriggerPressed;
+            speedMultiplier = Mathf.Clamp(leftJoystickInput.y, 0, 1);
         }
 
         #endregion
