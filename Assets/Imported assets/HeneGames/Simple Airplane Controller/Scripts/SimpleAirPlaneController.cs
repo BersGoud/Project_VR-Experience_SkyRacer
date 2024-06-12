@@ -6,6 +6,7 @@ namespace HeneGames.Airplane
     [RequireComponent(typeof(Rigidbody))]
     public class SimpleAirPlaneController : MonoBehaviour
     {
+        public bool isAgent = false;
         public void ResetAirplane()
         {
             planeIsDead = false;
@@ -182,7 +183,10 @@ namespace HeneGames.Airplane
         private void Update()
         {
             AudioSystem();
-            HandleInputs();
+            if (!isAgent)
+            {
+                HandleInputs();
+            }
 
             switch (airplaneState)
             {
