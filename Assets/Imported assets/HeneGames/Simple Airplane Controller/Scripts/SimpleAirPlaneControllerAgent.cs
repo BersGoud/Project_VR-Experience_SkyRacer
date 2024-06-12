@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace HeneGames.Airplane
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class SimpleAirPlaneController : MonoBehaviour
+    public class SimpleAirPlaneControllerAgent : MonoBehaviour
     {
         public void ResetAirplane()
         {
@@ -36,7 +36,7 @@ namespace HeneGames.Airplane
 
         #region Private variables
 
-        private List<SimpleAirPlaneCollider> airPlaneColliders = new List<SimpleAirPlaneCollider>();
+        private List<SimpleAirPlaneColliderAgent> airPlaneColliders = new List<SimpleAirPlaneColliderAgent>();
 
         private float maxSpeed = 0.6f;
         private float speedMultiplier;
@@ -405,7 +405,7 @@ namespace HeneGames.Airplane
             UpdatePropellersAndLights();
 
             //Reset colliders
-            foreach (SimpleAirPlaneCollider _airPlaneCollider in airPlaneColliders)
+            foreach (SimpleAirPlaneColliderAgent _airPlaneCollider in airPlaneColliders)
             {
                 _airPlaneCollider.collideSometing = false;
             }
@@ -514,7 +514,7 @@ namespace HeneGames.Airplane
                 GameObject _currentObject = colliders[i].gameObject;
 
                 //Add airplane collider to it and put it on the list
-                SimpleAirPlaneCollider _airplaneCollider = _currentObject.AddComponent<SimpleAirPlaneCollider>();
+                SimpleAirPlaneColliderAgent _airplaneCollider = _currentObject.AddComponent<SimpleAirPlaneColliderAgent>();
                 airPlaneColliders.Add(_airplaneCollider);
 
                 //Add airplane conroller reference to collider
@@ -567,7 +567,7 @@ namespace HeneGames.Airplane
                 if (airPlaneColliders[i].collideSometing)
                 {
                     //Reset colliders
-                    foreach(SimpleAirPlaneCollider _airPlaneCollider in airPlaneColliders)
+                    foreach(SimpleAirPlaneColliderAgent _airPlaneCollider in airPlaneColliders)
                     {
                         _airPlaneCollider.collideSometing = false;
                     }
