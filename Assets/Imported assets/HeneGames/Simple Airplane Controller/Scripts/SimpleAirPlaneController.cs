@@ -6,6 +6,27 @@ namespace HeneGames.Airplane
     [RequireComponent(typeof(Rigidbody))]
     public class SimpleAirPlaneController : MonoBehaviour
     {
+        public void ResetAirplane()
+        {
+            planeIsDead = false;
+            currentSpeed = defaultSpeed;
+            transform.position = Vector3.zero; // or any initial position
+            transform.rotation = Quaternion.identity;
+            rb.isKinematic = true;
+            rb.useGravity = false;
+
+            // Reset other necessary variables and states
+        }
+
+        public void SetInputs(float horizontal, float vertical, bool turbo, bool yawLeft, bool yawRight)
+        {
+            inputH = horizontal;
+            inputV = vertical;
+            inputTurbo = turbo;
+            inputYawLeft = yawLeft;
+            inputYawRight = yawRight;
+        }
+
         public enum AirplaneState
         {
             Flying,
@@ -161,7 +182,7 @@ namespace HeneGames.Airplane
         private void Update()
         {
             AudioSystem();
-            HandleInputs();
+            // HandleInputs();
 
             switch (airplaneState)
             {
