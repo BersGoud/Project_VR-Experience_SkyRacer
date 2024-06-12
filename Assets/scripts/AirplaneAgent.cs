@@ -7,16 +7,22 @@ using HeneGames.Airplane;
 public class AirplaneAgent : Agent
 {
     private SimpleAirPlaneController airplaneController;
+    private CheckpointManager checkpointManager;
+    private Transform nextCheckpoint;
 
     public override void Initialize()
     {
         airplaneController = GetComponent<SimpleAirPlaneController>();
+        checkpointManager = FindObjectOfType<CheckpointManager>();
+        nextCheckpoint = checkpointManager.GetNextCheckpoint();
     }
 
     public override void OnEpisodeBegin()
     {
         // Reset the airplane to initial state
         airplaneController.ResetAirplane();
+        checkpointManager.ResetCheckpoints();
+        nextCheckpoint = checkpointManager.GetNextCheckpoint();
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -26,7 +32,16 @@ public class AirplaneAgent : Agent
         sensor.AddObservation(airplaneController.TurboHeatValue());
         sensor.AddObservation(airplaneController.transform.localEulerAngles);
         sensor.AddObservation(airplaneController.transform.position);
-        // Add more observations as needed
+
+        // Add observations about the next checkpoint
+        if (nextCheckpoint != null)
+        {
+            sensor.AddObservation(nextCheckpoint.position);
+        }
+        else
+        {
+            sensor.AddObservation(Vector3.zero);
+        }
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
@@ -41,6 +56,13 @@ public class AirplaneAgent : Agent
             continuousActions[3] > 0.5f, // Yaw Left
             continuousActions[4] > 0.5f  // Yaw Right
         );
+
+        // Reward the agent for moving towards the next checkpoint
+        if (nextCheckpoint != null)
+        {
+            float distanceToCheckpoint = Vector3.Distance(transform.position, nextCheckpoint.position);
+            AddReward(1.0f / (distanceToCheckpoint + 1.0f)); // Reward inversely proportional to the distance
+        }
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -52,4 +74,34 @@ public class AirplaneAgent : Agent
         continuousActionsOut[3] = Input.GetKey(KeyCode.Q) ? 1.0f : 0.0f;
         continuousActionsOut[4] = Input.GetKey(KeyCode.E) ? 1.0f : 0.0f;
     }
+
+    public void HandleCheckpointCollision(Collider other)
+    {
+        if (nextCheckpoint != null && other.transform == nextCheckpoint)
+        {
+            // Reward the agent for passing through the checkpoint
+            AddReward(1.0f);
+            Debug.Log("Points");
+            checkpointManager.ReachedCheckpoint();
+            nextCheckpoint = checkpointManager.GetNextCheckpoint();
+        }
+    }
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (nextCheckpoint != null && other.transform == nextCheckpoint)
+    //    {
+    //        // Reward the agent for passing through the checkpoint
+    //        AddReward(1.0f);
+    //        Debug.Log("Points");
+    //        checkpointManager.ReachedCheckpoint();
+    //        nextCheckpoint = checkpointManager.GetNextCheckpoint();
+    //    }
+    //    else if (other.CompareTag("Wall") || other.CompareTag("Terrain"))
+    //    {
+    //        // End the episode if the agent collides with a wall or terrain
+    //        SetReward(-1.0f);
+    //        EndEpisode();
+    //    }
+    //}
 }
