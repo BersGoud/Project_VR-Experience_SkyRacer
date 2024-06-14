@@ -255,6 +255,22 @@ namespace HeneGames.Airplane
             }
         }
 
+        public float GetDefaultSpeed()
+        {
+            return defaultSpeed;
+        }
+
+        public float GetTurboSpeed()
+        {
+            return turboSpeed;
+        }
+
+        public bool IsTurboActive
+        {
+            get { return inputTurbo; }
+        }
+
+
         #region Flying State
 
         private void FlyingUpdate()
