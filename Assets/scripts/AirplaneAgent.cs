@@ -31,16 +31,19 @@ public class AirplaneAgent : Agent
         sensor.AddObservation(airplaneController.CurrentSpeed());
         sensor.AddObservation(airplaneController.TurboHeatValue());
         sensor.AddObservation(airplaneController.transform.localEulerAngles);
-        sensor.AddObservation(airplaneController.transform.position);
 
-        // Add observations about the next checkpoint
+        // Add observation for the relative position to the next checkpoint
         if (nextCheckpoint != null)
         {
-            sensor.AddObservation(nextCheckpoint.position);
+            Vector3 relativePosition = nextCheckpoint.position - airplaneController.transform.position;
+            sensor.AddObservation(relativePosition);
+            sensor.AddObservation(Vector3.Distance(airplaneController.transform.position, nextCheckpoint.position));
         }
         else
         {
+            // No checkpoint available, add a zero vector and zero distance
             sensor.AddObservation(Vector3.zero);
+            sensor.AddObservation(0f);
         }
     }
 
@@ -86,22 +89,4 @@ public class AirplaneAgent : Agent
             nextCheckpoint = checkpointManager.GetNextCheckpoint();
         }
     }
-
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (nextCheckpoint != null && other.transform == nextCheckpoint)
-    //    {
-    //        // Reward the agent for passing through the checkpoint
-    //        AddReward(1.0f);
-    //        Debug.Log("Points");
-    //        checkpointManager.ReachedCheckpoint();
-    //        nextCheckpoint = checkpointManager.GetNextCheckpoint();
-    //    }
-    //    else if (other.CompareTag("Wall") || other.CompareTag("Terrain"))
-    //    {
-    //        // End the episode if the agent collides with a wall or terrain
-    //        SetReward(-1.0f);
-    //        EndEpisode();
-    //    }
-    //}
 }
