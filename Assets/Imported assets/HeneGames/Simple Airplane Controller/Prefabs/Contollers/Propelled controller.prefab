@@ -566,7 +566,7 @@ MonoBehaviour:
   rollSpeed: 200
   yawTurboMultiplier: 0.3
   pitchTurboMultiplier: 0.5
-  rollTurboMultiplier: 1
+  rollTurboMultiplier: 1.01
   defaultSpeed: 20
   turboSpeed: 40
   accelerating: 10
@@ -635,10 +635,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 9
+    VectorObservationSize: 14
     NumStackedVectorObservations: 1
     m_ActionSpec:
-      m_NumContinuousActions: 6
+      m_NumContinuousActions: 2
       BranchSizes: 01000000
     VectorActionSize: 
     VectorActionDescriptions: []
@@ -646,7 +646,7 @@ MonoBehaviour:
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
-  m_BehaviorType: 1
+  m_BehaviorType: 0
   m_BehaviorName: AirplaneAgent
   TeamId: 0
   m_UseChildSensors: 1
@@ -667,7 +667,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 1000
+  MaxStep: 400
 --- !u!114 &2149122592476026624
 MonoBehaviour:
   m_ObjectHideFlags: 0

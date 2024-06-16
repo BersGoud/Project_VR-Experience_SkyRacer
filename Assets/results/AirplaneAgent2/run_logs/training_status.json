@@ -1,0 +1,56 @@
+{
+    "AirplaneAgent": {
+        "checkpoints": [
+            {
+                "steps": 499989,
+                "file_path": "results\\AirplaneAgent2\\AirplaneAgent\\AirplaneAgent-499989.onnx",
+                "reward": -0.30067462065527517,
+                "creation_time": 1718566972.4023583,
+                "auxillary_file_paths": [
+                    "results\\AirplaneAgent2\\AirplaneAgent\\AirplaneAgent-499989.pt"
+                ]
+            },
+            {
+                "steps": 500039,
+                "file_path": "results\\AirplaneAgent2\\AirplaneAgent\\AirplaneAgent-500039.onnx",
+                "reward": -0.2139749056659639,
+                "creation_time": 1718566972.4424055,
+                "auxillary_file_paths": [
+                    "results\\AirplaneAgent2\\AirplaneAgent\\AirplaneAgent-500039.pt"
+                ]
+            },
+            {
+                "steps": 999978,
+                "file_path": "results\\AirplaneAgent2\\AirplaneAgent\\AirplaneAgent-999978.onnx",
+                "reward": 4.11727009500776,
+                "creation_time": 1718567973.8370278,
+                "auxillary_file_paths": [
+                    "results\\AirplaneAgent2\\AirplaneAgent\\AirplaneAgent-999978.pt"
+                ]
+            },
+            {
+                "steps": 1010015,
+                "file_path": "results\\AirplaneAgent2\\AirplaneAgent\\AirplaneAgent-1010015.onnx",
+                "reward": null,
+                "creation_time": 1718567990.3435833,
+                "auxillary_file_paths": [
+                    "results\\AirplaneAgent2\\AirplaneAgent\\AirplaneAgent-1010015.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1010015,
+            "file_path": "results\\AirplaneAgent2\\AirplaneAgent.onnx",
+            "reward": null,
+            "creation_time": 1718567990.3435833,
+            "auxillary_file_paths": [
+                "results\\AirplaneAgent2\\AirplaneAgent\\AirplaneAgent-1010015.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}

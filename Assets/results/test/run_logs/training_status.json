@@ -1,0 +1,29 @@
+{
+    "AirplaneAgent": {
+        "checkpoints": [
+            {
+                "steps": 11100,
+                "file_path": "results\\test\\AirplaneAgent\\AirplaneAgent-11100.onnx",
+                "reward": -102.76257851544548,
+                "creation_time": 1718552425.8085856,
+                "auxillary_file_paths": [
+                    "results\\test\\AirplaneAgent\\AirplaneAgent-11100.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 11100,
+            "file_path": "results\\test\\AirplaneAgent.onnx",
+            "reward": -102.76257851544548,
+            "creation_time": 1718552425.8085856,
+            "auxillary_file_paths": [
+                "results\\test\\AirplaneAgent\\AirplaneAgent-11100.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}

@@ -13,21 +13,31 @@ namespace HeneGames.Airplane
         {
             planeIsDead = false;
             currentSpeed = defaultSpeed;
-            transform.position = Vector3.zero; // or any initial position
-            transform.rotation = Quaternion.identity;
+
+            // Generate random positions within the specified range
+            float randomX = Random.Range(-30, 30);
+            float randomY = Random.Range(-30, 30);
+            float randomZ = 0;
+
+            transform.position = new Vector3(randomX, randomY, randomZ);
+
+            // Generate slight random deviations in orientation
+            float randomRotationX = Random.Range(-30f, 30f);
+            float randomRotationY = Random.Range(-30f, 30f);
+            float randomRotationZ = Random.Range(-30f, 30f);
+
+            transform.rotation = Quaternion.Euler(randomRotationX, randomRotationY, randomRotationZ);
+
             rb.isKinematic = true;
             rb.useGravity = false;
 
             // Reset other necessary variables and states
         }
 
-        public void SetInputs(float vertical, bool yawLeft, bool yawRight)
+        public void SetInputs(float horizontal, float vertical)
         {
-            // inputH = horizontal;
+            inputH = horizontal;
             inputV = vertical;
-            // inputTurbo = turbo;
-            inputYawLeft = yawLeft;
-            inputYawRight = yawRight;
         }
 
         public enum AirplaneState

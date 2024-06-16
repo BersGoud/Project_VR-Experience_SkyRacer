@@ -13,8 +13,18 @@ public class AirplaneAgent : Agent
     public override void Initialize()
     {
         airplaneController = GetComponent<SimpleAirPlaneController>();
+        if (airplaneController == null)
+        {
+            Debug.LogError("SimpleAirPlaneController not found!");
+        }
+
         checkpointManager = FindObjectOfType<CheckpointManager>();
-        nextCheckpoint = checkpointManager.GetNextCheckpoint();
+        if (checkpointManager == null)
+        {
+            Debug.LogError("CheckpointManager not found!");
+        }
+
+        nextCheckpoint = checkpointManager?.GetNextCheckpoint();
     }
 
     public override void OnEpisodeBegin()
@@ -29,13 +39,16 @@ public class AirplaneAgent : Agent
     {
         // Add observations from the airplane controller
         sensor.AddObservation(airplaneController.CurrentSpeed());
-        sensor.AddObservation(airplaneController.TurboHeatValue());
-        sensor.AddObservation(airplaneController.transform.localEulerAngles);
+        // sensor.AddObservation(airplaneController.TurboHeatValue());
+        sensor.AddObservation(airplaneController.transform.localEulerAngles); // 3 values
+
+        sensor.AddObservation(airplaneController.transform.forward); // 3 values
+        sensor.AddObservation(airplaneController.transform.up); // 3 values
 
         // Add observation for the relative position to the next checkpoint
         if (nextCheckpoint != null)
         {
-            Vector3 relativePosition = nextCheckpoint.position - airplaneController.transform.position;
+            Vector3 relativePosition = (nextCheckpoint.position - airplaneController.transform.position).normalized;
             sensor.AddObservation(relativePosition);
             sensor.AddObservation(Vector3.Distance(airplaneController.transform.position, nextCheckpoint.position));
         }
@@ -53,29 +66,40 @@ public class AirplaneAgent : Agent
 
         // Map the actions to the airplane controller inputs
         airplaneController.SetInputs(
-            // continuousActions[0], // Horizontal
-            continuousActions[1], // Vertical
-            // continuousActions[2] > 0.5f, // Turbo
-            continuousActions[3] > 0.5f, // Yaw Left
-            continuousActions[4] > 0.5f  // Yaw Right
+            continuousActions[0], // Horizontal
+            continuousActions[1] // Vertical
         );
 
-        // Reward the agent for moving towards the next checkpoint
         if (nextCheckpoint != null)
         {
+            Vector3 directionToCheckpoint = (nextCheckpoint.position - transform.position).normalized;
             float distanceToCheckpoint = Vector3.Distance(transform.position, nextCheckpoint.position);
-            AddReward(1.0f / (distanceToCheckpoint + 1.0f)); // Reward inversely proportional to the distance
+
+            // Reward inversely proportional to the distance
+            float distanceReward = 1.0f / (distanceToCheckpoint + 1.0f);
+
+            // Reward for aligning with the direction to the checkpoint
+            Vector3 forward = transform.forward;
+            float directionReward = Vector3.Dot(forward, directionToCheckpoint);
+
+            // Penalty for deviating from the path
+            float deviationPenalty = Mathf.Abs(Vector3.Cross(forward, directionToCheckpoint).y);
+
+            // Combine the rewards and penalties
+            float totalReward = (distanceReward * 0.5f) + (directionReward * 0.3f) - (deviationPenalty * 0.2f);
+            AddReward(totalReward);
+
+            // Debug.Log($"Agent Position: {transform.position}, Next Checkpoint: {nextCheckpoint.position - airplaneController.transform.position}");
+            // Debug.Log($"Distance to checkpoint: {distanceToCheckpoint}, Distance Reward: {distanceReward}, Direction Reward: {directionReward}, Deviation Penalty: {deviationPenalty}, Total Reward: {totalReward}");
         }
+
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         var continuousActionsOut = actionsOut.ContinuousActions;
-        // continuousActionsOut[0] = Input.GetAxis("Horizontal");
+        continuousActionsOut[0] = Input.GetAxis("Horizontal");
         continuousActionsOut[1] = Input.GetAxis("Vertical");
-        // continuousActionsOut[2] = Input.GetKey(KeyCode.LeftShift) ? 1.0f : 0.0f;
-        continuousActionsOut[3] = Input.GetKey(KeyCode.Q) ? 1.0f : 0.0f;
-        continuousActionsOut[4] = Input.GetKey(KeyCode.E) ? 1.0f : 0.0f;
     }
 
     public void HandleCheckpointCollision(Collider other)
@@ -83,17 +107,18 @@ public class AirplaneAgent : Agent
         if (nextCheckpoint != null && other.transform == nextCheckpoint)
         {
             // Reward the agent for passing through the checkpoint
-            AddReward(1.0f);
+            AddReward(100f);
             Debug.Log("Points");
-            checkpointManager.ReachedCheckpoint();
-            nextCheckpoint = checkpointManager.GetNextCheckpoint();
+            //checkpointManager.ReachedCheckpoint();
+            //nextCheckpoint = checkpointManager.GetNextCheckpoint();
+            EndEpisode();
         }
     }
 
     public void WallColision()
     {
         Debug.Log("Collided with wall");
-        AddReward(-1f);
+        AddReward(-30f);
         EndEpisode();
     }
 }

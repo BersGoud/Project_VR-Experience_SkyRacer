@@ -1,0 +1,38 @@
+{
+    "AirplaneAgent": {
+        "checkpoints": [
+            {
+                "steps": 499973,
+                "file_path": "results\\AirlpaneAgent\\AirplaneAgent\\AirplaneAgent-499973.onnx",
+                "reward": 1.1267224794084376,
+                "creation_time": 1718565173.7661543,
+                "auxillary_file_paths": [
+                    "results\\AirlpaneAgent\\AirplaneAgent\\AirplaneAgent-499973.pt"
+                ]
+            },
+            {
+                "steps": 500037,
+                "file_path": "results\\AirlpaneAgent\\AirplaneAgent\\AirplaneAgent-500037.onnx",
+                "reward": 1.1267224794084376,
+                "creation_time": 1718565173.8123143,
+                "auxillary_file_paths": [
+                    "results\\AirlpaneAgent\\AirplaneAgent\\AirplaneAgent-500037.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 500037,
+            "file_path": "results\\AirlpaneAgent\\AirplaneAgent.onnx",
+            "reward": 1.1267224794084376,
+            "creation_time": 1718565173.8123143,
+            "auxillary_file_paths": [
+                "results\\AirlpaneAgent\\AirplaneAgent\\AirplaneAgent-500037.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}
