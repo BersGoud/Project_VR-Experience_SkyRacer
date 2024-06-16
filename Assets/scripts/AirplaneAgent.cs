@@ -53,9 +53,9 @@ public class AirplaneAgent : Agent
 
         // Map the actions to the airplane controller inputs
         airplaneController.SetInputs(
-            continuousActions[0], // Horizontal
+            // continuousActions[0], // Horizontal
             continuousActions[1], // Vertical
-            continuousActions[2] > 0.5f, // Turbo
+            // continuousActions[2] > 0.5f, // Turbo
             continuousActions[3] > 0.5f, // Yaw Left
             continuousActions[4] > 0.5f  // Yaw Right
         );
@@ -71,9 +71,9 @@ public class AirplaneAgent : Agent
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         var continuousActionsOut = actionsOut.ContinuousActions;
-        continuousActionsOut[0] = Input.GetAxis("Horizontal");
+        // continuousActionsOut[0] = Input.GetAxis("Horizontal");
         continuousActionsOut[1] = Input.GetAxis("Vertical");
-        continuousActionsOut[2] = Input.GetKey(KeyCode.LeftShift) ? 1.0f : 0.0f;
+        // continuousActionsOut[2] = Input.GetKey(KeyCode.LeftShift) ? 1.0f : 0.0f;
         continuousActionsOut[3] = Input.GetKey(KeyCode.Q) ? 1.0f : 0.0f;
         continuousActionsOut[4] = Input.GetKey(KeyCode.E) ? 1.0f : 0.0f;
     }
@@ -88,5 +88,12 @@ public class AirplaneAgent : Agent
             checkpointManager.ReachedCheckpoint();
             nextCheckpoint = checkpointManager.GetNextCheckpoint();
         }
+    }
+
+    public void WallColision()
+    {
+        Debug.Log("Collided with wall");
+        AddReward(-1f);
+        EndEpisode();
     }
 }

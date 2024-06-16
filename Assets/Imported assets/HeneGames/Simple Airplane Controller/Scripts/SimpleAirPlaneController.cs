@@ -21,11 +21,11 @@ namespace HeneGames.Airplane
             // Reset other necessary variables and states
         }
 
-        public void SetInputs(float horizontal, float vertical, bool turbo, bool yawLeft, bool yawRight)
+        public void SetInputs(float vertical, bool yawLeft, bool yawRight)
         {
-            inputH = horizontal;
+            // inputH = horizontal;
             inputV = vertical;
-            inputTurbo = turbo;
+            // inputTurbo = turbo;
             inputYawLeft = yawLeft;
             inputYawRight = yawRight;
         }

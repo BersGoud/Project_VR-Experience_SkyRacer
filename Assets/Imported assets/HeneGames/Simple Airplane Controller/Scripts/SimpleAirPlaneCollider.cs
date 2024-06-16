@@ -46,7 +46,14 @@ namespace HeneGames.Airplane
             else if (other.gameObject.GetComponent<SimpleAirPlaneCollider>() == null &&
                      other.gameObject.GetComponent<LandingArea>() == null)
             {
-                collideSometing = true;
+                if (controller.isAgent)
+                {
+                    agent.WallColision();
+                }
+                else
+                {
+                    collideSometing = true;
+                }
             }
         }
     }

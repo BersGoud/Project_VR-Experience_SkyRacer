@@ -667,7 +667,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 10000
+  MaxStep: 1000
 --- !u!114 &2149122592476026624
 MonoBehaviour:
   m_ObjectHideFlags: 0

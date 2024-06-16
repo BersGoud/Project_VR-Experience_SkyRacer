@@ -968,6 +968,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d236260ee0d659a4383b8680de7ec2ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isAgent: 0
   airplaneState: 0
   trailThickness: 1
   wingTrailEffects:
@@ -1005,6 +1006,9 @@ MonoBehaviour:
   - {fileID: 4374761917980465276}
   crashCollidersRoot: {fileID: 421360572813715916}
   takeoffLenght: 30
+  vrJoystickMode: 1
+  inputActions: {fileID: -944628639613478452, guid: 49c2b874f2ba23e40bac5ff1cd950f85,
+    type: 3}
 --- !u!1 &3796349201275800949
 GameObject:
   m_ObjectHideFlags: 0

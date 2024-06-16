@@ -4311,25 +4311,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5922568504761382265, guid: 94a5a8674a925ac46aef5475f8d4fd12,
         type: 3}
-      propertyPath: isAgent
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5922568504761382265, guid: 94a5a8674a925ac46aef5475f8d4fd12,
-        type: 3}
-      propertyPath: inputActions
-      value: 
-      objectReference: {fileID: -944628639613478452, guid: 49c2b874f2ba23e40bac5ff1cd950f85,
-        type: 3}
-    - target: {fileID: 5922568504761382265, guid: 94a5a8674a925ac46aef5475f8d4fd12,
-        type: 3}
       propertyPath: leftController
       value: 
       objectReference: {fileID: 50216247}
-    - target: {fileID: 5922568504761382265, guid: 94a5a8674a925ac46aef5475f8d4fd12,
-        type: 3}
-      propertyPath: vrJoystickMode
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5922568504761382265, guid: 94a5a8674a925ac46aef5475f8d4fd12,
         type: 3}
       propertyPath: rightController

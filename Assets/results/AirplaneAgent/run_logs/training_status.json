@@ -2,22 +2,22 @@
     "AirplaneAgent": {
         "checkpoints": [
             {
-                "steps": 400,
-                "file_path": "results\\AirplaneAgent\\AirplaneAgent\\AirplaneAgent-400.onnx",
-                "reward": 0.0,
-                "creation_time": 1718221633.3759644,
+                "steps": 9664,
+                "file_path": "results\\AirplaneAgent\\AirplaneAgent\\AirplaneAgent-9664.onnx",
+                "reward": null,
+                "creation_time": 1718491843.4327915,
                 "auxillary_file_paths": [
-                    "results\\AirplaneAgent\\AirplaneAgent\\AirplaneAgent-400.pt"
+                    "results\\AirplaneAgent\\AirplaneAgent\\AirplaneAgent-9664.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 400,
+            "steps": 9664,
             "file_path": "results\\AirplaneAgent\\AirplaneAgent.onnx",
-            "reward": 0.0,
-            "creation_time": 1718221633.3759644,
+            "reward": null,
+            "creation_time": 1718491843.4327915,
             "auxillary_file_paths": [
-                "results\\AirplaneAgent\\AirplaneAgent\\AirplaneAgent-400.pt"
+                "results\\AirplaneAgent\\AirplaneAgent\\AirplaneAgent-9664.pt"
             ]
         }
     },
