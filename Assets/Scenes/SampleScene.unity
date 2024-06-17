@@ -200,55 +200,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: Game
       objectReference: {fileID: 0}
-<<<<<<< HEAD
-    - target: {fileID: 5922568504761382265, guid: 94a5a8674a925ac46aef5475f8d4fd12,
-        type: 3}
-      propertyPath: leftController
-      value: 
-      objectReference: {fileID: 50216247}
-    - target: {fileID: 5922568504761382265, guid: 94a5a8674a925ac46aef5475f8d4fd12,
-        type: 3}
-      propertyPath: vrJoystickMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5922568504761382265, guid: 94a5a8674a925ac46aef5475f8d4fd12,
-        type: 3}
-      propertyPath: rightController
-      value: 
-      objectReference: {fileID: 640890985}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 6616292790851040055, guid: 94a5a8674a925ac46aef5475f8d4fd12,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1910843860}
-    - targetCorrespondingSourceObject: {fileID: 100432782280039232, guid: 94a5a8674a925ac46aef5475f8d4fd12,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 127189094}
-    - targetCorrespondingSourceObject: {fileID: 100432782280039232, guid: 94a5a8674a925ac46aef5475f8d4fd12,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1055737279}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4175745363025233738, guid: 94a5a8674a925ac46aef5475f8d4fd12,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 593818520}
-  m_SourcePrefab: {fileID: 100100000, guid: 94a5a8674a925ac46aef5475f8d4fd12, type: 3}
---- !u!1001 &8675511554490739046
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 401224662745520889, guid: 6347ccba176b39c47abe97370703e226,
-=======
     - target: {fileID: 6602185497387663790, guid: 1e99d0f2930798048aebb3d0579bfa0e,
->>>>>>> fb4af9be52f456c4c17e388dd498ddd681678020
         type: 3}
       propertyPath: m_LocalPosition.x
       value: -6075.3135

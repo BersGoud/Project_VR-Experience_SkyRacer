@@ -36,7 +36,7 @@ public class CheckpointTrainer : MonoBehaviour
     {
         Vector3 localSpawnPosition = new Vector3(
             Random.Range(-spawnArea.x / 2, spawnArea.x / 2),
-            Random.Range(0, 10),
+            Random.Range(0, 20),
             //0,
             Random.Range(-spawnArea.z / 2, spawnArea.z / 2)
         );
