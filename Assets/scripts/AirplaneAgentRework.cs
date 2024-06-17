@@ -17,6 +17,7 @@ public class AirplaneAgentRework : Agent
     public CheckpointTrainer CheckpointTrainer;
     private Transform nextCheckpoint;
     private float previousDistanceToCheckpoint;
+    private float previousVerticalDistanceToCheckpoint;
 
     [Header("Engine propellers settings")]
     [Range(10f, 10000f)]
@@ -37,8 +38,8 @@ public class AirplaneAgentRework : Agent
         if (nextCheckpoint != null)
         {
             previousDistanceToCheckpoint = Vector3.Distance(transform.position, nextCheckpoint.position);
+            previousVerticalDistanceToCheckpoint = Mathf.Abs(nextCheckpoint.position.y - transform.position.y);
         }
-
     }
 
     public override void OnEpisodeBegin()
@@ -52,9 +53,8 @@ public class AirplaneAgentRework : Agent
         float randomY = 0;
         if (threedimentional)
         {
-            randomY = Random.Range(0, 10);
+            randomY = Random.Range(0, 20);
         }
-
 
         float randomZ = Random.Range(-50, 50);
 
@@ -73,6 +73,7 @@ public class AirplaneAgentRework : Agent
         if (nextCheckpoint != null)
         {
             previousDistanceToCheckpoint = Vector3.Distance(transform.position, nextCheckpoint.position);
+            previousVerticalDistanceToCheckpoint = Mathf.Abs(nextCheckpoint.position.y - transform.position.y);
         }
     }
 
@@ -126,15 +127,15 @@ public class AirplaneAgentRework : Agent
         if (nextCheckpoint != null)
         {
             float distanceToCheckpoint = Vector3.Distance(transform.position, nextCheckpoint.position);
+            float verticalDistanceToCheckpoint = Mathf.Abs(nextCheckpoint.position.y - transform.position.y);
             float distanceDelta = previousDistanceToCheckpoint - distanceToCheckpoint;
+            float verticalDistanceDelta = previousVerticalDistanceToCheckpoint - verticalDistanceToCheckpoint;
 
             AddReward(distanceDelta * 0.1f); // Reward proportional to the distance reduced
-            previousDistanceToCheckpoint = distanceToCheckpoint;
+            AddReward(verticalDistanceDelta * 0.05f); // Reward proportional to the vertical distance reduced
 
-            // Reward for reaching the same altitude as the checkpoint
-            // float altitudeDifference = Mathf.Abs(transform.position.y - nextCheckpoint.position.y);
-            // float altitudeReward = Mathf.Max(0, 1f - (altitudeDifference / 10f)); // Reward decreases as altitude difference increases
-            // AddReward(altitudeReward * 0.05f);
+            previousDistanceToCheckpoint = distanceToCheckpoint;
+            previousVerticalDistanceToCheckpoint = verticalDistanceToCheckpoint;
         }
 
         // Penalty for stalling or no movement

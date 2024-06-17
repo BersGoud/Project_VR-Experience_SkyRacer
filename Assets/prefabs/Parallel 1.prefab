@@ -28,8 +28,8 @@ Transform:
   m_GameObject: {fileID: 194286071016918303}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 85, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 40, z: 173.03622}
+  m_LocalPosition: {x: 100, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 100, z: 207.66077}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9170200535397405359}
@@ -133,8 +133,8 @@ Transform:
   m_GameObject: {fileID: 846469028769574506}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 85}
-  m_LocalScale: {x: 174.69849, y: 40, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 100}
+  m_LocalScale: {x: 209.01422, y: 100, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9170200535397405359}
@@ -275,8 +275,8 @@ Transform:
   m_GameObject: {fileID: 5365156041085082955}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -85}
-  m_LocalScale: {x: 168.55162, y: 40, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -100}
+  m_LocalScale: {x: 213.65605, y: 100, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9170200535397405359}
@@ -380,8 +380,8 @@ Transform:
   m_GameObject: {fileID: 6239750284360262338}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -85, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 40, z: 171.58177}
+  m_LocalPosition: {x: -100, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 100, z: 214.49437}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9170200535397405359}
@@ -641,7 +641,7 @@ MonoBehaviour:
   m_BehaviorType: 0
   m_BehaviorName: AirplaneAgent
   TeamId: 0
-  m_UseChildSensors: 1
+  m_UseChildSensors: 0
   m_UseChildActuators: 1
   m_ObservableAttributeHandling: 0
 --- !u!114 &2795807988499567156
@@ -748,7 +748,7 @@ MonoBehaviour:
   m_RaysPerDirection: 8
   m_MaxRayDegrees: 70
   m_SphereCastRadius: 0.5
-  m_RayLength: 30
+  m_RayLength: 50
   m_RayLayerMask:
     serializedVersion: 2
     m_Bits: 4294967291
