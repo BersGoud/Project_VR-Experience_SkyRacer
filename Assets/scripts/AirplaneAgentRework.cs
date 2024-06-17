@@ -13,17 +13,16 @@ public class AirplaneAgentRework : Agent
     public float verticalSpeed = 5f; // New variable for vertical speed
     private Rigidbody rb;
     public bool threedimentional = false;
+    public Transform startposition;
 
-    public CheckpointTrainer CheckpointTrainer;
+    public CheckpointTrainer2 CheckpointTrainer;
     private Transform nextCheckpoint;
     private float previousDistanceToCheckpoint;
     private float previousVerticalDistanceToCheckpoint;
 
     [Header("Engine propellers settings")]
     [Range(10f, 10000f)]
-
     [SerializeField] private GameObject[] propellers;
-
 
     public override void Initialize()
     {
@@ -34,7 +33,18 @@ public class AirplaneAgentRework : Agent
             Debug.LogError("CheckpointTrainer not assigned!");
         }
 
-        nextCheckpoint = CheckpointTrainer?.GetNextCheckpoint();
+        CheckpointTrainer.ResetCheckpoints();
+        StartCoroutine(WaitForCheckpoints());
+    }
+
+    private IEnumerator WaitForCheckpoints()
+    {
+        while (!CheckpointTrainer.AreCheckpointsAvailable())
+        {
+            yield return null;
+        }
+
+        nextCheckpoint = CheckpointTrainer.GetNextCheckpoint();
         if (nextCheckpoint != null)
         {
             previousDistanceToCheckpoint = Vector3.Distance(transform.position, nextCheckpoint.position);
@@ -44,37 +54,18 @@ public class AirplaneAgentRework : Agent
 
     public override void OnEpisodeBegin()
     {
-        // Reset the airplane's position and rotation at the start of each episode
+        // Reset checkpoints
+        CheckpointTrainer.ResetCheckpoints();
+        StartCoroutine(WaitForCheckpoints());
+
+        // Reset the airplane's velocity and angular velocity
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        // Generate random positions within the specified range
-        float randomX = Random.Range(-50, 50);
-        float randomY = 0;
-        if (threedimentional)
-        {
-            randomY = Random.Range(0, 20);
-        }
+        // Reset the airplane's orientation to be upright
+        rb.rotation = Quaternion.identity;
 
-        float randomZ = Random.Range(-50, 50);
-
-        transform.localPosition = new Vector3(randomX, randomY, randomZ);
-
-        // Generate slight random deviations in orientation
-        float randomRotationX = 0;
-        float randomRotationY = Random.Range(-180f, 180f);
-        float randomRotationZ = 0;
-
-        transform.localRotation = Quaternion.Euler(randomRotationX, randomRotationY, randomRotationZ);
-
-        // Reset checkpoints
-        CheckpointTrainer.ResetCheckpoints();
-        nextCheckpoint = CheckpointTrainer?.GetNextCheckpoint();
-        if (nextCheckpoint != null)
-        {
-            previousDistanceToCheckpoint = Vector3.Distance(transform.position, nextCheckpoint.position);
-            previousVerticalDistanceToCheckpoint = Mathf.Abs(nextCheckpoint.position.y - transform.position.y);
-        }
+        rb.position = startposition.transform.position;
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -114,7 +105,14 @@ public class AirplaneAgentRework : Agent
 
         // Apply horizontal rotation
         float rotation = moveLeftRight * rotationSpeed * Time.deltaTime;
-        rb.MoveRotation(rb.rotation * Quaternion.Euler(0, rotation, 0));
+        Quaternion newRotation = rb.rotation * Quaternion.Euler(0, rotation, 0);
+
+
+        Vector3 eulerRotation = newRotation.eulerAngles;
+        eulerRotation.z = 0;
+        eulerRotation.x = 0;
+        rb.MoveRotation(Quaternion.Euler(eulerRotation));
+        
 
         // Apply vertical movement if 3D movement is enabled
         if (threedimentional)
@@ -136,6 +134,8 @@ public class AirplaneAgentRework : Agent
 
             previousDistanceToCheckpoint = distanceToCheckpoint;
             previousVerticalDistanceToCheckpoint = verticalDistanceToCheckpoint;
+
+            // Debug.Log(distanceToCheckpoint);
         }
 
         // Penalty for stalling or no movement
@@ -179,9 +179,9 @@ public class AirplaneAgentRework : Agent
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Checkpoint"))
+        if (other.CompareTag("Checkpoint") && Vector3.Distance(transform.position, nextCheckpoint.position) < 40)
         {
-            AddReward(1f);
+            AddReward(5f);
             Debug.Log("Checkpoint reached");
             CheckpointTrainer.ReachedCheckpoint();
             nextCheckpoint = CheckpointTrainer.GetNextCheckpoint();
@@ -189,12 +189,29 @@ public class AirplaneAgentRework : Agent
             {
                 previousDistanceToCheckpoint = Vector3.Distance(transform.position, nextCheckpoint.position);
             }
-            EndEpisode(); // End the episode when a checkpoint is reached
+            if (CheckpointTrainer.IsCurrentCheckpointLast())
+            {
+                Debug.Log("Circuit complete");
+                AddReward(60f);
+                EndEpisode();
+            }
         }
         else if (other.CompareTag("Wall"))
         {
-            AddReward(-1f);
+            AddReward(-2f);
             Debug.Log("Collided with wall");
+            CheckpointTrainer.ReachedCheckpoint();
+            nextCheckpoint = CheckpointTrainer.GetNextCheckpoint();
+            if (nextCheckpoint != null)
+            {
+                previousDistanceToCheckpoint = Vector3.Distance(transform.position, nextCheckpoint.position);
+            }
+            EndEpisode();
+        }
+        else if (other.CompareTag("Obstacle"))
+        {
+            AddReward(-2f);
+            Debug.Log("Collided with obstacle");
             CheckpointTrainer.ReachedCheckpoint();
             nextCheckpoint = CheckpointTrainer.GetNextCheckpoint();
             if (nextCheckpoint != null)
