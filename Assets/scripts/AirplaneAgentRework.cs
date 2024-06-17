@@ -16,6 +16,12 @@ public class AirplaneAgentRework : Agent
     private Transform nextCheckpoint;
     private float previousDistanceToCheckpoint;
 
+    [Header("Engine propellers settings")]
+    [Range(10f, 10000f)]
+
+    [SerializeField] private GameObject[] propellers;
+
+
     public override void Initialize()
     {
         rb = GetComponent<Rigidbody>();
@@ -30,6 +36,7 @@ public class AirplaneAgentRework : Agent
         {
             previousDistanceToCheckpoint = Vector3.Distance(transform.position, nextCheckpoint.position);
         }
+
     }
 
     public override void OnEpisodeBegin()
@@ -70,9 +77,9 @@ public class AirplaneAgentRework : Agent
         // Add observation for the relative position to the next checkpoint
         if (nextCheckpoint != null)
         {
-            Vector3 relativePosition = (nextCheckpoint.position - transform.position) / 100f; // Normalize distance
+            Vector3 relativePosition = (nextCheckpoint.position - transform.position) / 100f;
             sensor.AddObservation(relativePosition);
-            sensor.AddObservation(Vector3.Distance(transform.position, nextCheckpoint.position) / 100f); // Normalize distance
+            sensor.AddObservation(Vector3.Distance(transform.position, nextCheckpoint.position) / 100f);
         }
         else
         {
@@ -146,5 +153,39 @@ public class AirplaneAgentRework : Agent
             }
             EndEpisode(); // End the episode when a checkpoint is reached
         }
+        else if (other.CompareTag("Wall"))
+        {
+            AddReward(-1f);
+            Debug.Log("Collided with wall");
+            CheckpointTrainer.ReachedCheckpoint();
+            nextCheckpoint = CheckpointTrainer.GetNextCheckpoint();
+            if (nextCheckpoint != null)
+            {
+                previousDistanceToCheckpoint = Vector3.Distance(transform.position, nextCheckpoint.position);
+            }
+            EndEpisode();
+        }
+    }
+
+    private void RotatePropellers(GameObject[] _rotateThese, float _speed)
+    {
+        for (int i = 0; i < _rotateThese.Length; i++)
+        {
+            _rotateThese[i].transform.Rotate(Vector3.forward * -_speed * Time.deltaTime);
+        }
+    }
+
+    private void UpdatePropellers()
+    {
+        //Rotate propellers if any
+        if (propellers.Length > 0)
+        {
+            RotatePropellers(propellers, 1000);
+        }
+    }
+
+    private void Update()
+    {
+        UpdatePropellers();
     }
 }
