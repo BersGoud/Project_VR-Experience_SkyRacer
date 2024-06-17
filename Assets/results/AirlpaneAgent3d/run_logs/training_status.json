@@ -1,0 +1,56 @@
+{
+    "AirplaneAgent": {
+        "checkpoints": [
+            {
+                "steps": 184282,
+                "file_path": "results\\AirlpaneAgent3d\\AirplaneAgent\\AirplaneAgent-184282.onnx",
+                "reward": null,
+                "creation_time": 1718614847.6391907,
+                "auxillary_file_paths": [
+                    "results\\AirlpaneAgent3d\\AirplaneAgent\\AirplaneAgent-184282.pt"
+                ]
+            },
+            {
+                "steps": 499991,
+                "file_path": "results\\AirlpaneAgent3d\\AirplaneAgent\\AirplaneAgent-499991.onnx",
+                "reward": 0.6754866970909966,
+                "creation_time": 1718615692.7299461,
+                "auxillary_file_paths": [
+                    "results\\AirlpaneAgent3d\\AirplaneAgent\\AirplaneAgent-499991.pt"
+                ]
+            },
+            {
+                "steps": 999980,
+                "file_path": "results\\AirlpaneAgent3d\\AirplaneAgent\\AirplaneAgent-999980.onnx",
+                "reward": 3.362644754923307,
+                "creation_time": 1718616507.6950092,
+                "auxillary_file_paths": [
+                    "results\\AirlpaneAgent3d\\AirplaneAgent\\AirplaneAgent-999980.pt"
+                ]
+            },
+            {
+                "steps": 1002571,
+                "file_path": "results\\AirlpaneAgent3d\\AirplaneAgent\\AirplaneAgent-1002571.onnx",
+                "reward": null,
+                "creation_time": 1718616511.9093215,
+                "auxillary_file_paths": [
+                    "results\\AirlpaneAgent3d\\AirplaneAgent\\AirplaneAgent-1002571.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1002571,
+            "file_path": "results\\AirlpaneAgent3d\\AirplaneAgent.onnx",
+            "reward": null,
+            "creation_time": 1718616511.9093215,
+            "auxillary_file_paths": [
+                "results\\AirlpaneAgent3d\\AirplaneAgent\\AirplaneAgent-1002571.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}

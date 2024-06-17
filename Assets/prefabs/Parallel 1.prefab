@@ -630,7 +630,7 @@ MonoBehaviour:
     VectorObservationSize: 10
     NumStackedVectorObservations: 1
     m_ActionSpec:
-      m_NumContinuousActions: 2
+      m_NumContinuousActions: 3
       BranchSizes: 01000000
     VectorActionSize: 
     VectorActionDescriptions: []
@@ -659,9 +659,11 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 1000
+  MaxStep: 600
   speed: 40
   rotationSpeed: 100
+  verticalSpeed: 15
+  threedimentional: 1
   CheckpointTrainer: {fileID: 8163595400355282429}
   propellers:
   - {fileID: 6130844195762904549}

@@ -10,7 +10,9 @@ public class AirplaneAgentRework : Agent
 {
     public float speed = 10f;
     public float rotationSpeed = 100f;
+    public float verticalSpeed = 5f; // New variable for vertical speed
     private Rigidbody rb;
+    public bool threedimentional = false;
 
     public CheckpointTrainer CheckpointTrainer;
     private Transform nextCheckpoint;
@@ -48,6 +50,12 @@ public class AirplaneAgentRework : Agent
         // Generate random positions within the specified range
         float randomX = Random.Range(-50, 50);
         float randomY = 0;
+        if (threedimentional)
+        {
+            randomY = Random.Range(0, 10);
+        }
+
+
         float randomZ = Random.Range(-50, 50);
 
         transform.localPosition = new Vector3(randomX, randomY, randomZ);
@@ -94,9 +102,10 @@ public class AirplaneAgentRework : Agent
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-        // Actions, size = 2
+        // Actions, size = 3 for 3D movement
         float moveForward = Mathf.Clamp(actionBuffers.ContinuousActions[0], 0, 1); // Ensure no backward movement
         float moveLeftRight = actionBuffers.ContinuousActions[1];
+        float moveVertical = threedimentional ? actionBuffers.ContinuousActions[2] : 0f;
 
         // Apply forward movement
         Vector3 forwardMove = transform.forward * moveForward * speed * Time.deltaTime;
@@ -106,6 +115,13 @@ public class AirplaneAgentRework : Agent
         float rotation = moveLeftRight * rotationSpeed * Time.deltaTime;
         rb.MoveRotation(rb.rotation * Quaternion.Euler(0, rotation, 0));
 
+        // Apply vertical movement if 3D movement is enabled
+        if (threedimentional)
+        {
+            Vector3 verticalMove = transform.up * moveVertical * verticalSpeed * Time.deltaTime;
+            rb.MovePosition(rb.position + verticalMove);
+        }
+
         // Reward for reducing distance to the checkpoint
         if (nextCheckpoint != null)
         {
@@ -114,6 +130,11 @@ public class AirplaneAgentRework : Agent
 
             AddReward(distanceDelta * 0.1f); // Reward proportional to the distance reduced
             previousDistanceToCheckpoint = distanceToCheckpoint;
+
+            // Reward for reaching the same altitude as the checkpoint
+            // float altitudeDifference = Mathf.Abs(transform.position.y - nextCheckpoint.position.y);
+            // float altitudeReward = Mathf.Max(0, 1f - (altitudeDifference / 10f)); // Reward decreases as altitude difference increases
+            // AddReward(altitudeReward * 0.05f);
         }
 
         // Penalty for stalling or no movement
@@ -137,6 +158,22 @@ public class AirplaneAgentRework : Agent
         var continuousActionsOut = actionsOut.ContinuousActions;
         continuousActionsOut[0] = Mathf.Clamp(Input.GetAxis("Vertical"), 0, 1); // Forward only, no backward movement
         continuousActionsOut[1] = Input.GetAxis("Horizontal"); // Left/Right
+
+        if (threedimentional)
+        {
+            if (Input.GetKey(KeyCode.Space))
+            {
+                continuousActionsOut[2] = 1f; // Move up
+            }
+            else if (Input.GetKey(KeyCode.LeftShift))
+            {
+                continuousActionsOut[2] = -1f; // Move down
+            }
+            else
+            {
+                continuousActionsOut[2] = 0f; // No vertical movement
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
