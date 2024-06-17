@@ -22,6 +22,6 @@ public class GameManager : MonoBehaviour
     public void AddScore(int points)
     {
         score += points;
-        Debug.Log("Score: " + score);
+        //Debug.Log("Score: " + score);
     }
 }
