@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public int score = 0;
+    public int aiScore = 0;
 
     [Header("UI Components")]
     public GameObject positionUI;
@@ -13,6 +14,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI lapText;
     public GameObject endGamePanel;  // Reference to the panel that should be enabled
     public TextMeshProUGUI endGameMessageText;
+
 
     private int currentLap = 1;
     private int totalLaps = 3; // Set the default number of laps
@@ -38,38 +40,22 @@ public class GameManager : MonoBehaviour
     public void AddScore(int points)
     {
         score += points;
-        Debug.Log("Score: " + score);
-
-        // Check if we need to update the lap
-        if (score >= 8 && currentLap == 1)
-        {
-            currentLap = 2;
-        }
-        else if (score >= 15 && currentLap == 2)
-        {
-            currentLap = 3;
-        }
-        else if (score >= 22 && currentLap == 3)
-        {
-            EndGame();
-        }
-
-        UpdatePositionUI();
     }
 
     public void UpdatePositionUI()
     {
         // Assuming you have a method to get the AI score
-        int aiScore = GetAIScore();
+        Debug.Log("aiScore: " + aiScore);
+        Debug.Log("Score: " + score);
 
         positionText.text = "Position: " + (score > aiScore ? "1st" : "2nd");
         lapText.text = "Lap: " + Mathf.Min(currentLap, totalLaps) + "/" + totalLaps;
     }
 
-    private int GetAIScore()
+
+    public void AddAIScore()
     {
-        // Implement logic to get the AI's score
-        return 0; // Placeholder return value
+        aiScore++;
     }
 
     public void EndGame()
@@ -96,5 +82,29 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f; // Reset time scale
         // Load the main menu scene (assuming you have a scene named "MainMenu")
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+    }
+
+    private void Update()
+    {
+
+        // Check if we need to update the lap
+        if (score >= 8 && currentLap == 1)
+        {
+            currentLap = 2;
+        }
+        else if (score >= 15 && currentLap == 2)
+        {
+            currentLap = 3;
+        }
+        else if (score >= 22 && currentLap == 3)
+        {
+            EndGame();
+        }
+        else if (aiScore >= 22)
+        {
+            EndGame();
+        }
+
+        UpdatePositionUI();
     }
 }

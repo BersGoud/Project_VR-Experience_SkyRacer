@@ -5,6 +5,8 @@ public class CheckpointManager : MonoBehaviour
 {
     public List<Transform> checkpoints;
     private int currentCheckpointIndex = 0;
+    private int currentCheckpointIndexAgent = 0;
+
 
     public Transform GetNextCheckpoint()
     {
@@ -23,5 +25,24 @@ public class CheckpointManager : MonoBehaviour
     public void ResetCheckpoints()
     {
         currentCheckpointIndex = 0;
+    }
+
+    public Transform GetNextCheckpointAgent()
+    {
+        if (currentCheckpointIndexAgent < checkpoints.Count)
+        {
+            return checkpoints[currentCheckpointIndexAgent];
+        }
+        return null;
+    }
+
+    public void ReachedCheckpointAgent()
+    {
+        currentCheckpointIndexAgent++;
+    }
+
+    public void ResetCheckpointsAgent()
+    {
+        currentCheckpointIndexAgent = 0;
     }
 }
