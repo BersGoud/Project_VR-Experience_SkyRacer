@@ -26,7 +26,8 @@ namespace HeneGames.Airplane
         private void OnTriggerEnter(Collider other)
         {
 
-            if (other.gameObject.tag == "Checkpoint") {
+            if (other.gameObject.tag == "Checkpoint")
+            {
                 if (controller.isAgent)
                 {
                     agent.HandleCheckpointCollision(other);
@@ -46,14 +47,7 @@ namespace HeneGames.Airplane
             else if (other.gameObject.GetComponent<SimpleAirPlaneCollider>() == null &&
                      other.gameObject.GetComponent<LandingArea>() == null)
             {
-                if (controller.isAgent)
-                {
-                    agent.WallColision();
-                }
-                else
-                {
-                    collideSometing = true;
-                }
+                collideSometing = true;
             }
         }
     }

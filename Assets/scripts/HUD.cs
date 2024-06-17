@@ -8,9 +8,18 @@ public class HUD : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI speedText;
     [SerializeField] private TextMeshProUGUI heightText;
+    [SerializeField] private TextMeshProUGUI crashText;  // Add this line
     [SerializeField] private SimpleAirPlaneController airplaneController;
     [SerializeField] private Transform airplaneTransform;
     [SerializeField] private AudioSource lowHeightAudioSource;
+
+    private void Start()
+    {
+        if (crashText != null)
+        {
+            crashText.text = "";
+        }
+    }
 
     private void Update()
     {
@@ -61,5 +70,13 @@ public class HUD : MonoBehaviour
             return Terrain.activeTerrain.SampleHeight(position);
         }
         return 0f;
+    }
+
+    public void ShowCrashMessage()  // Add this method
+    {
+        if (crashText != null)
+        {
+            crashText.text = "[CRASH]\nRESTART GAME";
+        }
     }
 }

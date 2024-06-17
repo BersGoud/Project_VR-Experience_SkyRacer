@@ -9,6 +9,8 @@ namespace HeneGames.Airplane
     public class SimpleAirPlaneController : MonoBehaviour
     {
         public bool isAgent = false;
+        public HUD hud;
+
         public void ResetAirplane()
         {
             planeIsDead = false;
@@ -665,8 +667,13 @@ namespace HeneGames.Airplane
 
             //Kill player
             planeIsDead = true;
+            
+            // invoke crash...
+            if (hud != null)
+            {
+                hud.ShowCrashMessage();
+            }
 
-            //Here you can add your own code...
         }
 
         #endregion
