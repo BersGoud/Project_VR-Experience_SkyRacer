@@ -1090,7 +1090,7 @@ PrefabInstance:
     - target: {fileID: 6677358117832869404, guid: 1e99d0f2930798048aebb3d0579bfa0e,
         type: 3}
       propertyPath: vrJoystickMode
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6677358117832869404, guid: 1e99d0f2930798048aebb3d0579bfa0e,
         type: 3}
